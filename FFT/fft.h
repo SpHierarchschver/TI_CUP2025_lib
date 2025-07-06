@@ -13,7 +13,12 @@ typedef enum
 } WindowType;
 
 void make_win (int N);
-void cfft (complex_t *x, int n);
-void rfft (float32_t input[], int n, float32_t outputMagnitude[], WindowType winType);
+void cfft (complex_t x[], int N);
+void cifft (complex_t x[], int N);
+void rfft (float32_t input[], int N, float32_t outputMagnitude[], WindowType winType);
+void rifft (const float32_t outputMagnitude[], int N, float32_t time_data[]);
+
+/* For debug. */
+void cifft_test (int N, float32_t time_data[]);
 
 #endif /* fft.h */

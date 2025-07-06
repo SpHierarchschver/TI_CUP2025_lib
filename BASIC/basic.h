@@ -8,7 +8,7 @@
 /* ADC settings. */
 #define ADC_MIN_VAL         0               // ADC min value.
 #define ADC_MAX_VAL         65535           // ADC max value.
-#define ADC_SAMPLE_RATE     ((int)1e6)      // ADC sample rate.
+#define ADC_SAMPLE_RATE     ((int)1.024e6)  // ADC sample rate.
 
 /* Math settings. */
 #define SIMAL               1e-10           // A tiny quantity.
