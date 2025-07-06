@@ -31,9 +31,9 @@ arctan (float32_t x)
 {
 	float32_t tmp;
 	float32_t sum = 0.0;
-	float32_t stepSize = f32abs (x) / TAN_INT_STEP;
+	float32_t stepSize = f32abs (x) / ATAN_INT_STEP;
 	
-	for (uint32_t i = 0; i < TAN_INT_STEP; ++i)
+	for (uint32_t i = 0; i < ATAN_INT_STEP; ++i)
 	{
 		tmp = stepSize*i + stepSize/2.0;
 		sum += stepSize / (1.0 + tmp*tmp);
