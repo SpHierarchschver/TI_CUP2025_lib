@@ -4,7 +4,8 @@
 #include "basic.h"
 
 void fir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t coef[], int order);
-void iir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t NUM[][3], const float32_t DEN[][3], int order);
+void iir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t NUM[][3], 
+                 const float32_t DEN[][3], int order);
 
 /*------------------------------ Low Pass FIR begin ------------------------------*/
 /*

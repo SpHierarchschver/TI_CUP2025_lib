@@ -7,7 +7,9 @@ static float32_t iirZ[IIR_MAX_ORDER][2];
 static void iir_init (int N);
 
 void
-fir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t coef[], int order)
+fir_filter (int N, const float32_t signalIn[], 
+            float32_t signalOut[], const float32_t coef[], 
+            int order)
 {
 	for (int i = 0; i < N; ++i)
 	{
@@ -22,7 +24,9 @@ fir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const floa
 }
 
 void
-iir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t NUM[][3], const float32_t DEN[][3], int order)
+iir_filter (int N, const float32_t signalIn[], 
+            float32_t signalOut[], const float32_t NUM[][3], 
+            const float32_t DEN[][3], int order)
 {
   if (order > IIR_MAX_ORDER)
     return;

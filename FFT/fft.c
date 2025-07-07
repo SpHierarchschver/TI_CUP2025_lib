@@ -75,7 +75,8 @@ cifft (complex_t x[], int N)
 }
 
 void
-rfft (float32_t input[], int N, float32_t outputMagnitude[], WindowType winType)
+rfft (float32_t input[], int N, 
+      float32_t outputMagnitude[], WindowType winType)
 {
   int N2 = N / 2;
 
@@ -147,7 +148,9 @@ rfft (float32_t input[], int N, float32_t outputMagnitude[], WindowType winType)
 
     complexOutput[i].real = even.real + rotatedOdd.real;
     complexOutput[i].imag = even.imag + rotatedOdd.imag;
-    arm_sqrt_f32(complexOutput[i].real * complexOutput[i].real + complexOutput[i].imag * complexOutput[i].imag, &outputMagnitude[i]);
+    arm_sqrt_f32(complexOutput[i].real*complexOutput[i].real 
+                 + complexOutput[i].imag * complexOutput[i].imag, 
+                 &outputMagnitude[i]);
 
     outputMagnitude[i] *= 2.0 / N;
   }
@@ -170,7 +173,8 @@ rfft (float32_t input[], int N, float32_t outputMagnitude[], WindowType winType)
 }
 
 void
-rifft (const float32_t outputMagnitude[], int N, float32_t time_data[])
+rifft (const float32_t outputMagnitude[], int N, 
+       float32_t time_data[])
 {
   int N2 = N / 2;
   float32_t mag;

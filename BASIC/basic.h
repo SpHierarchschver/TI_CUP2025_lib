@@ -24,9 +24,9 @@ typedef struct
 } complex_t;
 
 /* Function prototypes. */
-void adc_convert (uint32_t adcIn[], float32_t adcOut[], int N);                                 // Convert adc value to real voltage value.
-float32_t f32abs (float32_t x);             // x's absolute value.
-float32_t f32pow (float32_t x, uint8_t n);  // x to n_th power.
-float32_t arctan (float32_t x);
+void adc_convert (uint32_t adcIn[], float32_t adcOut[], int N);   // Convert adc value to real voltage value.
+float32_t f32abs (float32_t x);                                   // Absolute value of x.
+float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_th power.
+float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
 
 #endif /* basic.h */
