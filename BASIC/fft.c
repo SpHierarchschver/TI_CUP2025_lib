@@ -1,10 +1,10 @@
 #include "fft.h"
 
-complex_t z[ADC_MAX_LEN];
-complex_t complexOutput[ADC_MAX_LEN/2+1];
+static complex_t z[ADC_MAX_LEN];
+static complex_t complexOutput[ADC_MAX_LEN/2+1];
 
 /* Windows. */
-float32_t hanning[ADC_MAX_LEN];
+static float32_t hanning[ADC_MAX_LEN];
 
 static void bit_reverse (complex_t x[], int n);
 

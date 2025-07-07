@@ -1,13 +1,5 @@
 #include "basic.h"
 
-void
-adc_convert (uint32_t adcIn[], float32_t adcOut[], int N)
-{
-  for (int i = 0; i < N; ++i)
-    adcOut[i] = ((float32_t)adcIn[i] - (float32_t)ADC_OFFSET) 
-              / (float32_t)((ADC_MAX_VAL - ADC_MIN_VAL) / 2);
-}
-
 /* float32_t abs function. */
 float32_t
 f32abs (float32_t x)
