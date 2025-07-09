@@ -10,6 +10,12 @@
 #define ATAN_INT_THRESHOLD  0.1             // Threshold to activate integral method of arctan.
 #define ATAN_INT_STEP       1000            // Step length for integral method of arctan.
 
+typedef enum
+{
+  ASCENDING,
+  DESCENDING,
+} QsortType;
+
 /* Structs typedef. */
 typedef struct
 {
@@ -17,9 +23,17 @@ typedef struct
   float32_t imag;
 } complex_t;
 
+typedef struct
+{
+  float32_t val;
+  int       idx;
+} SortIns;
+
 /* Function prototypes. */
 float32_t f32abs (float32_t x);                                   // Absolute value of x.
 float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_th power.
 float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
+void init_qsort (float32_t arrIn[], SortIns insts[], int N);
+void qsort (SortIns insts[], int N, QsortType);
 
 #endif /* basic.h */

@@ -1,5 +1,8 @@
 #include "basic.h"
 
+static void swap (SortIns * a, SortIns * b);
+static void qsort_r (SortIns arr[], int l, int r, QsortType type);
+
 /* float32_t abs function. */
 float32_t
 f32abs (float32_t x)
@@ -43,4 +46,61 @@ arctan (float32_t x)
 		sum *= -1;
 	
 	return sum;
+}
+
+void
+init_qsort (float32_t arrIn[], SortIns insts[], int N)
+{
+  for (int i = 0; i < N; ++i)
+  {
+    insts[i].val = arrIn[i];
+    insts[i].idx = i;
+  }
+}
+
+void
+qsort (SortIns insts[], int N, QsortType type)
+{
+  qsort_r (insts, 0, N-1, type);
+}
+
+static void
+swap (SortIns * a, SortIns * b)
+{
+  SortIns tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+
+static void
+qsort_r (SortIns arr[], int l, int r, QsortType type)
+{
+  if (l >= r) return;
+
+  float32_t pivot = arr[(l + r) / 2].val;
+  int i = l;
+  int j = r;
+
+  while (i <= j)
+  {
+    if (type == ASCENDING)
+    {
+      while (arr[i].val < pivot) ++i;
+      while (arr[j].val > pivot) --j;
+    } else
+    {
+      while (arr[i].val > pivot) ++i;
+      while (arr[j].val < pivot) --j;
+    }
+
+    if (i <= j)
+    {
+      swap(&arr[i], &arr[j]);
+      ++i;
+      --j;
+    }
+  }
+
+  if (l < j) qsort_r (arr, l, j, type);
+  if (i < r) qsort_r (arr, i, r, type);
 }
