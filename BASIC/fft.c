@@ -74,7 +74,7 @@ cifft (complex_t x[], int N)
   }
 }
 
-void
+complex_t *
 rfft (float32_t input[], int N, 
       float32_t outputMagnitude[], WindowType winType)
 {
@@ -170,6 +170,8 @@ rfft (float32_t input[], int N,
       break;
     }
   }
+
+  return z;
 }
 
 void
