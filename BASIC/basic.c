@@ -48,6 +48,15 @@ arctan (float32_t x)
 	return sum;
 }
 
+int
+is_equal_f (float32_t a, float32_t b, float32_t tolerance)
+{
+  if (f32abs (a-b) <= tolerance)
+    return 1;
+  
+  return 0;
+}
+
 void
 init_qsort (float32_t arrIn[], SortIns insts[], int N)
 {

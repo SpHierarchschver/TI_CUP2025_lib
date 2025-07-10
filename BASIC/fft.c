@@ -1,17 +1,17 @@
 #include "fft.h"
 
-static complex_t z[ADC_MAX_LEN];
-static complex_t complexOutput[ADC_MAX_LEN/2+1];
+static complex_t z[FFT_MAX_LEN], tmp[FFT_MAX_LEN];
+static complex_t complexOutput[FFT_MAX_LEN/2+1];
 
 /* Windows. */
-static float32_t hanning[ADC_MAX_LEN];
+static float32_t hanning[FFT_MAX_LEN];
 
 static void bit_reverse (complex_t x[], int n);
 
 void
 make_win (int N)
 {
-  if (N >= ADC_MAX_LEN)
+  if (N >= FFT_MAX_LEN)
     return;
 
   for (int i = 0; i < N; ++i)
@@ -74,16 +74,16 @@ cifft (complex_t x[], int N)
   }
 }
 
-complex_t *
-rfft (float32_t input[], int N, 
+void
+rfft (float32_t input[], int N, complex_t cmplxOut[],
       float32_t outputMagnitude[], WindowType winType)
 {
   int N2 = N / 2;
 
   for (int i = 0; i < N2; ++i)
   {
-    z[i].real = input[2*i];
-    z[i].imag = input[2*i+1];
+    cmplxOut[i].real = input[2*i];
+    cmplxOut[i].imag = input[2*i+1];
 
     switch (winType)
     {
@@ -91,8 +91,8 @@ rfft (float32_t input[], int N,
       break;
 
     case HANNING:
-      z[i].real *= hanning[2*i];
-      z[i].imag *= hanning[2*i+1];
+      cmplxOut[i].real *= hanning[2*i];
+      cmplxOut[i].imag *= hanning[2*i+1];
       break;
 
     default:
@@ -100,14 +100,14 @@ rfft (float32_t input[], int N,
     }
   }
 
-  cfft (z, N2);
+  cfft (cmplxOut, N2);
 
-  complexOutput[0].real = z[0].real + z[0].imag;
+  complexOutput[0].real = cmplxOut[0].real + cmplxOut[0].imag;
   complexOutput[0].imag = 0;
   outputMagnitude[0] = f32abs (complexOutput[0].real);
   outputMagnitude[0] *= 1.0 / N;
 
-  complexOutput[N2].real = z[0].real - z[0].imag;
+  complexOutput[N2].real = cmplxOut[0].real - cmplxOut[0].imag;
   complexOutput[N2].imag = 0;
   outputMagnitude[N2] = f32abs (complexOutput[N2].real);
   outputMagnitude[N2] *= 1.0 / N;
@@ -117,18 +117,18 @@ rfft (float32_t input[], int N,
     int conjugateIdx = N2 - i;
     complex_t zConj = 
     {
-      .real = z[conjugateIdx].real,
-      .imag = -z[conjugateIdx].imag
+      .real = cmplxOut[conjugateIdx].real,
+      .imag = -cmplxOut[conjugateIdx].imag
     };
     complex_t even = 
     {
-      .real = (z[i].real + zConj.real) * 0.5f,
-      .imag = (z[i].imag + zConj.imag) * 0.5f
+      .real = (cmplxOut[i].real + zConj.real) * 0.5f,
+      .imag = (cmplxOut[i].imag + zConj.imag) * 0.5f
     };
     complex_t diff = 
     {
-      .real = z[i].real - zConj.real,
-      .imag = z[i].imag - zConj.imag
+      .real = cmplxOut[i].real - zConj.real,
+      .imag = cmplxOut[i].imag - zConj.imag
     };
     complex_t odd = 
     {
@@ -170,8 +170,6 @@ rfft (float32_t input[], int N,
       break;
     }
   }
-
-  return z;
 }
 
 void
@@ -203,7 +201,29 @@ rifft (const float32_t outputMagnitude[], int N,
 }
 
 void
-cifft_test (int N, float32_t time_data[])
+cifft_test (complex_t x[], int N, float32_t time_data[])
+{
+  for (int i = 0; i < N; ++i)
+    x[i].imag = -x[i].imag;
+
+  cfft(x, N);
+
+  for (int i = 0; i < N; ++i)
+  {
+    x[i].imag = -x[i].imag;
+    x[i].real /= N;
+    x[i].imag /= N;
+  }
+
+  for (int i = 0; i < N; ++i)
+  {
+    time_data[2*i]   = x[i].real;
+    time_data[2*i+1] = x[i].imag;
+  }
+}
+
+void
+cifft_local (int N, float32_t time_data[])
 {
   for (int i = 0; i < N; ++i)
     z[i].imag = -z[i].imag;
