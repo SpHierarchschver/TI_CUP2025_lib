@@ -1,6 +1,6 @@
 #include "fft.h"
 
-static complex_t z[FFT_MAX_LEN], tmp[FFT_MAX_LEN];
+static complex_t z[FFT_MAX_LEN];
 static complex_t complexOutput[FFT_MAX_LEN/2+1];
 
 /* Windows. */
