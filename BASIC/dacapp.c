@@ -2,7 +2,7 @@
 
 float32_t amplitude, frequency, initPhase, dc;
 WaveType waveformOut;
-uint32_t curIdx;
+uint32_t curIdx, phaseStep;
 uint32_t dacOut[DAC_RESOLUTION];
 
 static uint32_t f2dac (float32_t x);
@@ -42,8 +42,11 @@ dac_set_wave_single (float32_t amp, float32_t freq, float32_t phi, float32_t off
 }
 
 void
-dac_set_wave (float32_t signalIn[], int N)
+dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N)
 {
+  phaseStep = 4294.967296 * freq * 1.5 + corr;
+  // phaseStep = DAC_MAX_PHASE / DAC_SYS_CLK * freq * 1.5 + corr;
+
   for (int i = 0; i < N; ++i)
     dacOut[i] = f2dac (signalIn[i]);  
 }
@@ -52,9 +55,8 @@ void
 HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef * htim)
 {
   __HAL_TIM_CLEAR_IT (&htim6, TIM_IT_UPDATE);
-  ++curIdx;
-  curIdx &= (uint32_t)(DAC_RESOLUTION-1);
-  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[curIdx]);
+  curIdx += phaseStep;
+  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[(curIdx >> 20) & 0xFFF]);
 }
 
 void

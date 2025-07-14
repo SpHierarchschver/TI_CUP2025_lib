@@ -31,7 +31,7 @@ typedef enum
 void dac_set_wave_single
 (float32_t amp, float32_t freq, 
  float32_t phi, float32_t offset, WaveType type);
-void dac_set_wave (float32_t signalIn[], int N);
+void dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N);
 void HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef * htim);
 
 /* For debug. */
