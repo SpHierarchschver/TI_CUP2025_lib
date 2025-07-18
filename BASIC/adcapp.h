@@ -5,8 +5,8 @@
 #include "adc.h"
 
 /*
- * ADC_SAMPLE_RATE 4.096MHz
- * DIVM3 15, DIVN3 491, DIVR3 10, fracn3 4260 
+ * 24 196 4981 10 -> 20.48
+ * 15 491 4260 10 -> 81.92
  */
 
 #define ADC_MIN_VAL         0               // ADC min value.
@@ -17,5 +17,6 @@
 void adc_convert (uint32_t adcIn[], float32_t adcOut[], int N);    // Convert adc value to real voltage value.
 void adc_inv_convert (float32_t adcIn[], int32_t adcOut[], int N);
 void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef *hadc);    // ADC interrupt handler function.
+void HAL_ADC_ConvHalfCpltCallback (ADC_HandleTypeDef *hadc);
 
 #endif /* adcapp.h */

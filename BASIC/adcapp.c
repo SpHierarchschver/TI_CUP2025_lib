@@ -21,8 +21,12 @@ void
 HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef *hadc)
 {	
 	if (hadc->Instance == ADC1)
-	{
 		adcFlag = 1;
-		// HAL_ADC_Stop_DMA (&hadc1);
-	}
+}
+
+void
+HAL_ADC_ConvHalfCpltCallback (ADC_HandleTypeDef *hadc)
+{
+  if (hadc->Instance == ADC1)
+		adcFlag = 2;
 }
