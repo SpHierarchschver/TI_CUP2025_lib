@@ -10,7 +10,7 @@
 #define DAC_AMP         20000
 #define DAC_MAX_PHASE   4294967295
 #define DAC_SYS_CLK     1e6
-#define DAC_RESOLUTION  4096
+#define DAC_RESOLUTION  1024
 #define DAC_MAX_VAL     4095
 #define DAC_MIN_VAL     0
 #define DAC_OFFSET      2047

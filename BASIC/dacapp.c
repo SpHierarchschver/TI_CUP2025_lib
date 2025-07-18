@@ -44,8 +44,9 @@ dac_set_wave_single (float32_t amp, float32_t freq, float32_t phi, float32_t off
 void
 dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N)
 {
-  phaseStep = 4294.967296 * freq * 1.5 + corr;
-  // phaseStep = DAC_MAX_PHASE / DAC_SYS_CLK * freq * 1.5 + corr;
+  // phaseStep = 4294.967296 * freq * 1.5 + corr;
+  phaseStep = DAC_MAX_PHASE / DAC_SYS_CLK * freq * 1.5 + corr;
+  // phaseStep = 1;
 
   for (int i = 0; i < N; ++i)
     dacOut[i] = f2dac (signalIn[i]);  
@@ -56,7 +57,7 @@ HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef * htim)
 {
   __HAL_TIM_CLEAR_IT (&htim6, TIM_IT_UPDATE);
   curIdx += phaseStep;
-  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[(curIdx >> 20) & 0xFFF]);
+  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[(curIdx >> 22) & 0xFFF]);
 }
 
 void

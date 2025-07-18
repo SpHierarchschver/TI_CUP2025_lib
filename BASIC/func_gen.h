@@ -17,7 +17,11 @@ void gen_triangular (float32_t signalOut[], int N,
 void gen_square (float32_t signalOut[], int N,
                  float32_t amp, float32_t freq, 
                  float32_t phi, float32_t duty, 
-                 float32_t Fs);
+                 float32_t Fs, int aboveZero);
+
+void gen_2ASK (float32_t signalOut[], int N,
+               float32_t amp, float32_t carrierFreq, float32_t transRate,
+               float32_t Fs, uint8_t seq[], int seqLen);
 
 /* Given an array of pointers, each pointing to a float32_t array, add all these signals of length N and output to signalOut. */
 void adder (float32_t ** signals, float32_t signalOut[], int signalNum, int N);

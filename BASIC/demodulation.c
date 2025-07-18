@@ -48,7 +48,7 @@ demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t carrierFreq
     break;
   }
 
-  print_demod_out (signalOut, N);
+  // print_demod_out (signalOut, N);
 }
 
 void
@@ -136,8 +136,29 @@ demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N, float32_t sample
   // float32_t z = 0.0f;
 
   Biquad lp;
-  biquad_init_lowpass(&lp, 2e4, sampleRate);
+  biquad_init_lowpass(&lp, 1e3, sampleRate);
 
+  print_demod_out (signalIn, N);
+
+  
+  for (int i = 0; i < N; ++i)
+    signalIn[i] = f32abs (signalIn[i]);
+
+  // print_demod_out (signalIn, N);
+
+  
+  for (int i = 0; i < N; ++i)
+    signalOut[i] = biquad_process(&lp, signalIn[i]);
+
+  // print_demod_out (signalOut, N);
+
+  
+  for (int i = 0; i < N; ++i)
+    signalOut[i] = (signalOut[i] > 100 ? 1.0f : 0.0f);
+  
+  // print_demod_out (signalOut, N);
+
+  /*
   for (int i = 0; i < N; ++i)
   {
     // z += alpha * (f32abs (signalIn[i]) - z);
@@ -145,15 +166,7 @@ demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N, float32_t sample
     signalOut[i] = (biquad_process(&lp, f32abs (signalIn[i])) > 100) ? 1.0f : 0.0f;
     // signalOut[i] = biquad_process(&lp, f32abs (signalIn[i]));
   }
-
-  // for (int i = 0; i < N; ++i)
-  //   signalIn[i] = f32abs (signalIn[i]);
-
-  // iir_filter (N, signalIn, signalOut, LPI_Fs512k_Fc20k_O10_NUM, LPI_Fs512k_Fc20k_O10_DEN, LPI_Fs512k_Fc20k_O10_ORDER);
-
-  // fir_filter (N, signalIn, signalOut, LPF_Fs512k_Fc20k_O200_COEF, LPF_Fs512k_Fc20k_O200_ORDER);
-
-  // print_demod_out (signalOut, N);
+  */
 }
 
 static void
