@@ -1,23 +1,16 @@
 #include "demodulation.h"
 #include "filter.h"
 
-static void multiply_carrier (float32_t signalIn[], int N, float32_t carrierFreq, float32_t sampleRate);
-static void lowpass_filter (float32_t signalIn[], float32_t signalOut[], int N);
-static ModType judge_mod_type (float32_t signalOut[], int N);
-
 static void demod_AM (float32_t signalIn[], float32_t signalOut[], int N);
 static void demod_FM (float32_t signalIn[], float32_t signalOut[], int N);
 static void demod_PM (float32_t signalIn[], float32_t signalOut[], int N);
-static void demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N);
-static void demod_FSK2 (float32_t signalIn[], float32_t signalOut[], int N);
-static void demod_PSK2 (float32_t signalIn[], float32_t signalOut[], int N);
+static void demod_BASK (float32_t signalIn[], float32_t signalOut[], int N);
+static void demod_BFSK (float32_t signalIn[], float32_t signalOut[], int N);
+static void demod_BPSK (float32_t signalIn[], float32_t signalOut[], int N);
 
 void
-demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t carrierFreq, float32_t sampleRate)
+demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t sampleRate, ModType signalModType)
 {
-  ModType signalModType;
-  signalModType = AM;
-
   switch (signalModType)
   {
   case AM:
@@ -32,16 +25,16 @@ demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t carrierFreq
     demod_PM (signalIn, signalOut, N);
     break;
 
-  case ASK2:
-    demod_ASK2 (signalIn, signalOut, N);
+  case BASK:
+    demod_BASK (signalIn, signalOut, N);
     break;
 
-  case FSK2:
-    demod_FSK2 (signalIn, signalOut, N);
+  case BFSK:
+    demod_BFSK (signalIn, signalOut, N);
     break;
 
-  case PSK2:
-    demod_PSK2 (signalIn, signalOut, N);
+  case BPSK:
+    demod_BPSK (signalIn, signalOut, N);
     break;
   
   default:
@@ -49,44 +42,19 @@ demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t carrierFreq
   }
 }
 
-void
-print_demod_out (float32_t signal[], int N)
-{
-  for (int i = 0; i < N; ++i)
-    printf ("%f\r\n", signal[i]);
-}
-
-static void
-multiply_carrier (float32_t signalIn[], int N, float32_t carrierFreq, float32_t sampleRate)
-{
-
-}
-
-static void
-lowpass_filter (float32_t signalIn[], float32_t signalOut[], int N)
-{
-  fir_filter (N, signalIn, signalOut, LPF_Fs512k_Fc100k_O10_COEF, LPF_Fs512k_Fc100k_O10_ORDER);
-}
-
-static ModType
-judge_mod_type (float32_t signalOut[], int N)
-{
-
-}
-
 static void
 demod_AM (float32_t signalIn[], float32_t signalOut[], int N)
 {
-  // print_demod_out (signalIn, N);
+  // print_arr_f (signalIn, N);
   
   for (int i = 0; i < N; ++i)
     signalIn[i] = f32abs (signalIn[i]);
 
-  // print_demod_out (signalIn, N);
+  // print_arr_f (signalIn, N);
 
   fir_filter (N, signalIn, signalOut, LPF_Fs512k_Fc20k_O50_COEF, LPF_Fs512k_Fc20k_O50_ORDER);
 
-  print_demod_out (signalOut, N);
+  // print_arr_f (signalOut, N);
 }
 
 static void
@@ -102,33 +70,43 @@ demod_PM (float32_t signalIn[], float32_t signalOut[], int N)
 }
 
 static void
-demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N)
+demod_BASK (float32_t signalIn[], float32_t signalOut[], int N)
 {
-  // print_demod_out (signalIn, N);
+  // print_arr_f (signalIn, N);
   
   for (int i = 0; i < N; ++i)
     signalIn[i] = f32abs (signalIn[i]);
 
-  // print_demod_out (signalIn, N);
+  // print_arr_f (signalIn, N);
 
   fir_filter (N, signalIn, signalOut, LPF_Fs512k_Fc20k_O10_COEF, LPF_Fs512k_Fc20k_O10_ORDER);
 
-  // print_demod_out (signalOut, N);
+  // print_arr_f (signalOut, N);
   
   for (int i = 0; i < N; ++i)
     signalOut[i] = (signalOut[i] > 200 ? 1.0f : 0.0f);
   
-  // print_demod_out (signalOut, N);
+  // print_arr_f (signalOut, N);
 }
 
 static void
-demod_FSK2 (float32_t signalIn[], float32_t signalOut[], int N)
+demod_BFSK (float32_t signalIn[], float32_t signalOut[], int N)
 {
+  fir_filter (N, signalIn, signalOut, BPF_Fs1024k_Fc59k_61k_O200_COEF, BPF_Fs1024k_Fc59k_61k_O200_ORDER);
+  // iir_filter (N, signalIn, signalOut, BPI_Fs1024k_Fc55k_65k_O20_NUM, BPI_Fs1024k_Fc55k_65k_O20_DEN, BPI_Fs1024k_Fc55k_65k_O20_ORDER);
 
+  for (int i = 0; i < N; ++i)
+    signalIn[i] = signalOut[i];
+
+  print_arr_f (signalIn, N);
+
+  demod_BASK (signalIn, signalOut, N);
+
+  // print_arr_f (signalOut, N);
 }
 
 static void
-demod_PSK2 (float32_t signalIn[], float32_t signalOut[], int N)
+demod_BPSK (float32_t signalIn[], float32_t signalOut[], int N)
 {
 
 }

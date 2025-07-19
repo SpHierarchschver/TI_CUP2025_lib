@@ -1,6 +1,7 @@
 #ifndef BASIC_H
 #define BASIC_H
 
+// #include <stdio.h>
 #include "string.h"
 #include "arm_math.h"
 #include "arm_const_structs.h"
@@ -39,5 +40,8 @@ int is_equal_f (float32_t a, float32_t b,
 
 void init_qsort (float32_t arrIn[], SortIns insts[], int N);
 void qsort (SortIns insts[], int N, QsortType);
+
+void print_arr_f (float32_t arrIn[], int N);
+void print_arr_u32 (uint32_t arrIn[], int N);
 
 #endif /* basic.h */

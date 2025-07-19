@@ -73,6 +73,20 @@ qsort (SortIns insts[], int N, QsortType type)
   qsort_r (insts, 0, N-1, type);
 }
 
+void
+print_arr_f (float32_t arrIn[], int N)
+{
+  for (uint32_t i = 0; i < N; ++i)
+    printf ("%f\r\n", arrIn[i]);
+}
+
+void
+print_arr_u32 (uint32_t arrIn[], int N)
+{
+  for (uint32_t i = 0; i < N; ++i)
+    printf ("%d\r\n", arrIn[i]);
+}
+
 static void
 swap (SortIns * a, SortIns * b)
 {

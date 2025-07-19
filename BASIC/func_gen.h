@@ -19,9 +19,26 @@ void gen_square (float32_t signalOut[], int N,
                  float32_t phi, float32_t duty, 
                  float32_t Fs, int aboveZero);
 
-void gen_2ASK (float32_t signalOut[], int N,
+void gen_AM (float32_t signalOut[], int N, float32_t amp, float32_t modDepth,
+             float32_t carrierFreq, float32_t transRate, float32_t Fs);
+
+void gen_BASK (float32_t signalOut[], int N,
                float32_t amp, float32_t carrierFreq, float32_t transRate,
                float32_t Fs, uint8_t seq[], int seqLen);
+
+void gen_FM (float32_t signalOut[], int N, float32_t amp, float32_t freqDev, 
+             float32_t carrierFreq, float32_t Fs);
+
+void gen_BFSK (float32_t signalOut[], int N, float32_t amp, 
+               float32_t carrierFreq, float32_t hopFreq, float32_t transRate, 
+               float32_t Fs, uint8_t seq[], int seqLen);
+
+void gen_PM (float32_t signalOut[], int N, float32_t amp, float32_t modCoef,
+             float32_t carrierFreq, float32_t transRate, float32_t Fs);
+
+void gen_BPSK (float32_t signalOut[], int N, float32_t amp,
+               float32_t carrierFreq, float32_t transRate, float32_t Fs,
+               uint8_t seq[], int seqLen);
 
 /* Given an array of pointers, each pointing to a float32_t array, add all these signals of length N and output to signalOut. */
 void adder (float32_t ** signals, float32_t signalOut[], int signalNum, int N);
