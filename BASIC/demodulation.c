@@ -136,9 +136,9 @@ demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N, float32_t sample
   // float32_t z = 0.0f;
 
   Biquad lp;
-  biquad_init_lowpass(&lp, 1e3, sampleRate);
+  biquad_init_lowpass(&lp, 24e3, sampleRate);
 
-  print_demod_out (signalIn, N);
+  // print_demod_out (signalIn, N);
 
   
   for (int i = 0; i < N; ++i)
@@ -146,17 +146,20 @@ demod_ASK2 (float32_t signalIn[], float32_t signalOut[], int N, float32_t sample
 
   // print_demod_out (signalIn, N);
 
-  
+  /*
   for (int i = 0; i < N; ++i)
     signalOut[i] = biquad_process(&lp, signalIn[i]);
+  */
+
+  fir_filter (N, signalIn, signalOut, LPF_Fs512k_Fc20k_O10_COEF, LPF_Fs512k_Fc20k_O10_ORDER);
 
   // print_demod_out (signalOut, N);
 
   
   for (int i = 0; i < N; ++i)
-    signalOut[i] = (signalOut[i] > 100 ? 1.0f : 0.0f);
+    signalOut[i] = (signalOut[i] > 200 ? 1.0f : 0.0f);
   
-  // print_demod_out (signalOut, N);
+  print_demod_out (signalOut, N);
 
   /*
   for (int i = 0; i < N; ++i)
