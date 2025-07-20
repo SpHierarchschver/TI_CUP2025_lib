@@ -34,6 +34,7 @@ typedef struct
 float32_t f32abs (float32_t x);                                   // Absolute value of x.
 float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_th power.
 float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
+float32_t mean (float32_t arrIn[], int N);
 
 int is_equal_f (float32_t a, float32_t b, 
                 float32_t tolerance);

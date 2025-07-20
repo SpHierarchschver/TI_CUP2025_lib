@@ -48,6 +48,17 @@ arctan (float32_t x)
 	return sum;
 }
 
+float32_t
+mean (float32_t arrIn[], int N)
+{
+  float32_t sum = 0.0;
+
+  for (int i = 0; i < N; ++i)
+    sum += arrIn[i];
+
+  return sum / N;
+}
+
 int
 is_equal_f (float32_t a, float32_t b, float32_t tolerance)
 {
