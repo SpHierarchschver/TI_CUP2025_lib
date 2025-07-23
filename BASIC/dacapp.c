@@ -57,14 +57,7 @@ HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef * htim)
 {
   __HAL_TIM_CLEAR_IT (&htim6, TIM_IT_UPDATE);
   curIdx += phaseStep;
-  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[(curIdx >> 22) & 0xFFF]);
-}
-
-void
-print_dacOut ()
-{
-  for (int i = 0; i < DAC_RESOLUTION; ++i)
-    printf ("%d\r\n", dacOut[i]);
+  HAL_DAC_SetValue (&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacOut[(curIdx >> DAC_WORD_SHIFT) & 0xFFF]);
 }
 
 static uint32_t

@@ -5,6 +5,9 @@
 
 complex_t cmplxOut[FFT_MAX_LEN];
 SortIns qsortIns[FFT_MAX_LEN];
+float32_t env[FFT_MAX_LEN*2];
+
+static int is_BFSK (float32_t fftIn[], int N, float32_t thresholdVal, int thresholdNum);
 
 static void demod_AM (float32_t signalIn[], float32_t signalOut[], int N);
 static void demod_FM (float32_t signalIn[], float32_t signalOut[], int N, float32_t Fs);
@@ -12,6 +15,55 @@ static void demod_PM (float32_t signalIn[], float32_t signalOut[], int N, float3
 static void demod_BASK (float32_t signalIn[], float32_t signalOut[], int N);
 static void demod_BFSK (float32_t signalIn[], float32_t signalOut[], int N, float32_t Fs);
 static void demod_BPSK (float32_t signalIn[], float32_t signalOut[], int N, float32_t Fs);
+
+ModTypeDebug
+judge_mod_type (float32_t signalIn[], int N, float32_t Fs)
+{
+  for (int i = 0; i < N; ++i)
+    env[i] = f32abs (signalIn[i]);
+
+  float32_t envMean = mean (env, N);
+  float32_t envDev = squdev (env, N, envMean);
+  arm_sqrt_f32 (envDev, &envDev);
+
+  rfft (signalIn, N, cmplxOut, env, NO_WIN);
+  // print_arr_f (env, N/2+1);
+
+  float32_t fftMean = mean (env, N/2+1);
+  float32_t fftDev = squdev (env, N/2+1, fftMean);
+  arm_sqrt_f32 (fftDev, &fftDev);
+
+  ModTypeDebug debug;
+  debug.envMean = envMean;
+  debug.envDev = envDev;
+  debug.fftMean = fftMean;
+  debug.fftDev = fftDev;
+  
+  if (is_spectrum_leak (env, N/2+1, LEAK_VAL_THRESHOLD, LEAK_NUM_THRESHOLD))
+  {
+    /* BA/F/PSK. */
+    if (envDev > ENV_DEV_MEAN_RATIO * envMean)
+      debug.modType = BASK;
+    else
+    {
+      if (is_BFSK (env, N/2+1, BFSK_VAL_THRESHOLD, BFSK_NUM_THRESHOLD))
+        debug.modType = BFSK;
+      else
+        debug.modType = BPSK;
+    }
+  }
+  else
+  {
+    /* A/F/PM. */
+    if (envDev > ENV_DEV_MEAN_RATIO * envMean)
+      debug.modType = AM;
+    else
+      /* It's impossible to tell FM and PM apart without prior. We consider it as FM as default. */
+      debug.modType = FM;
+  }
+
+  return debug;
+}
 
 void
 demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t sampleRate, ModType signalModType)
@@ -45,6 +97,23 @@ demod (float32_t signalIn[], float32_t signalOut[], int N, float32_t sampleRate,
   default:
     break;
   }
+}
+
+static int
+is_BFSK (float32_t fftIn[], int N, float32_t thresholdVal, int thresholdNum)
+{
+  int sum = 0;
+
+  for (int i = 0; i < N; ++i)
+  {
+    if (fftIn[i] > thresholdVal)
+      ++sum;
+  }
+
+  if (sum > thresholdNum)
+    return 0;
+
+  return 1;
 }
 
 static void

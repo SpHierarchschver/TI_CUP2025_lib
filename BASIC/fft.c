@@ -7,6 +7,7 @@ static complex_t complexOutput[FFT_MAX_LEN/2+1];
 static float32_t hanning[FFT_MAX_LEN];
 
 static void bit_reverse (complex_t x[], int n);
+static void cifft_local (complex_t x[], int N);
 
 void
 make_win (int N)
@@ -55,22 +56,6 @@ cfft (complex_t x[], int N)
         x[idx2].imag = a.imag - rotated_b.imag;
       }
     }
-  }
-}
-
-void
-cifft (complex_t x[], int N)
-{
-  for (int i = 0; i < N; ++i)
-    x[i].imag = -x[i].imag;
-
-  cfft(x, N);
-
-  for (int i = 0; i < N; ++i)
-  {
-    x[i].imag = -x[i].imag;
-    x[i].real /= N;
-    x[i].imag /= N;
   }
 }
 
@@ -191,7 +176,7 @@ rifft (const float32_t outputMagnitude[], int N,
     z[i].imag = 0.0f;
   }
 
-  cifft (z, N2);
+  cifft_local (z, N2);
 
   for (int i = 0; i < N2; ++i)
   {
@@ -201,7 +186,7 @@ rifft (const float32_t outputMagnitude[], int N,
 }
 
 void
-cifft_test (complex_t x[], int N, float32_t time_data[])
+cifft (complex_t x[], int N, float32_t time_data[])
 {
   for (int i = 0; i < N; ++i)
     x[i].imag = -x[i].imag;
@@ -219,28 +204,6 @@ cifft_test (complex_t x[], int N, float32_t time_data[])
   {
     time_data[2*i]   = x[i].real;
     time_data[2*i+1] = x[i].imag;
-  }
-}
-
-void
-cifft_local (int N, float32_t time_data[])
-{
-  for (int i = 0; i < N; ++i)
-    z[i].imag = -z[i].imag;
-
-  cfft(z, N);
-
-  for (int i = 0; i < N; ++i)
-  {
-    z[i].imag = -z[i].imag;
-    z[i].real /= N;
-    z[i].imag /= N;
-  }
-
-  for (int i = 0; i < N; ++i)
-  {
-    time_data[2*i]   = z[i].real;
-    time_data[2*i+1] = z[i].imag;
   }
 }
 
@@ -265,5 +228,21 @@ bit_reverse (complex_t x[], int n)
       x[i] = x[j];
       x[j] = tmp;
     }
+  }
+}
+
+static void
+cifft_local (complex_t x[], int N)
+{
+  for (int i = 0; i < N; ++i)
+    x[i].imag = -x[i].imag;
+
+  cfft(x, N);
+
+  for (int i = 0; i < N; ++i)
+  {
+    x[i].imag = -x[i].imag;
+    x[i].real /= N;
+    x[i].imag /= N;
   }
 }

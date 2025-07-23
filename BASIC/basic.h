@@ -35,9 +35,11 @@ float32_t f32abs (float32_t x);                                   // Absolute va
 float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_th power.
 float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
 float32_t mean (float32_t arrIn[], int N);
+float32_t squdev (float32_t arrIn[], int N, float32_t meanVal);
 
 int is_equal_f (float32_t a, float32_t b, 
                 float32_t tolerance);
+int is_spectrum_leak (float32_t fftIn[], int N, float32_t thresholdVal, int thresholdNum);
 
 void init_qsort (float32_t arrIn[], SortIns insts[], int N);
 void qsort (SortIns insts[], int N, QsortType);

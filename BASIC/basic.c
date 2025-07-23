@@ -59,12 +59,40 @@ mean (float32_t arrIn[], int N)
   return sum / N;
 }
 
+float32_t
+squdev (float32_t arrIn[], int N, float32_t meanVal)
+{
+  float32_t sum = 0.0;
+
+  for (int i = 0; i < N; ++i)
+    sum += (arrIn[i] - meanVal) * (arrIn[i] - meanVal);
+
+  return sum / N;
+}
+
 int
 is_equal_f (float32_t a, float32_t b, float32_t tolerance)
 {
   if (f32abs (a-b) <= tolerance)
     return 1;
   
+  return 0;
+}
+
+int
+is_spectrum_leak (float32_t fftIn[], int N, float32_t thresholdVal, int thresholdNum)
+{
+  int sum = 0;
+
+  for (int i = 0; i < N; ++i)
+  {
+    if (fftIn[i] > thresholdVal)
+      ++sum;
+  }
+
+  if (sum > thresholdNum)
+    return 1;
+
   return 0;
 }
 
