@@ -24,6 +24,43 @@ fir_filter (int N, const float32_t signalIn[],
 }
 
 void
+fir_single_init (FIRState *st, int num_taps)
+{
+  st->num_taps = num_taps;
+  st->idx = 0;
+  st->hist = (float32_t *)calloc(num_taps, sizeof(float32_t));
+}
+
+void
+fir_single_free (FIRState *st)
+{
+  free(st->hist);
+  st->hist = NULL;
+}
+
+float32_t
+fir_single (float32_t input, const float32_t *coef, FIRState *st)
+{
+  int N = st->num_taps;
+  float32_t acc = 0.0;
+
+  st->hist[st->idx] = input;
+
+  int tap = 0;
+  for (int k = st->idx; k >= 0; k--, tap++) {
+      acc += st->hist[k] * coef[tap];
+  }
+  for (int k = N - 1; tap < N; k--, tap++) {
+      acc += st->hist[k] * coef[tap];
+  }
+
+  st->idx++;
+  if (st->idx >= N) st->idx = 0;
+
+  return acc;
+}
+
+void
 iir_filter (int N, const float32_t signalIn[], 
             float32_t signalOut[], const float32_t NUM[][3], 
             const float32_t DEN[][3], int order)

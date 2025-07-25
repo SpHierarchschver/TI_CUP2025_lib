@@ -32,6 +32,13 @@ typedef struct
   int       idx;
 } SortIns;
 
+typedef struct
+{
+  float32_t *hist;
+  int num_taps;
+  int idx;
+} FIRState;
+
 /* Function prototypes. */
 float32_t f32abs (float32_t x);                                   // Absolute value of x.
 float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_th power.
@@ -44,6 +51,7 @@ void f32_map_u8 (float32_t arrIn[], uint8_t arrOut[], int N);
 int is_equal_f (float32_t a, float32_t b, 
                 float32_t tolerance);
 int is_spectrum_leak (float32_t fftIn[], int N, float32_t thresholdVal, int thresholdNum);
+int sgn (float32_t x);
 
 void init_qsort (float32_t arrIn[], SortIns insts[], int N);
 void qsort (SortIns insts[], int N, QsortType);

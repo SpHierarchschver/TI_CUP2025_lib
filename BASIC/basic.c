@@ -110,6 +110,12 @@ is_spectrum_leak (float32_t fftIn[], int N, float32_t thresholdVal, int threshol
   return 0;
 }
 
+int
+sgn (float32_t x)
+{
+  return (x >= 0) ? 1 : -1;
+}
+
 void
 init_qsort (float32_t arrIn[], SortIns insts[], int N)
 {

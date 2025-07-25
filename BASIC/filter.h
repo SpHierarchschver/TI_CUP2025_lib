@@ -1,9 +1,12 @@
 #ifndef FILTER_H
-#define FILTER_H
+#define FILTER_H  
 
 #include "basic.h"
 
 void fir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t coef[], int order);
+void fir_single_init (FIRState *st, int num_taps);
+void fir_single_free (FIRState *st);
+float32_t fir_single (float32_t input, const float32_t *coef, FIRState *st);
 void iir_filter (int N, const float32_t signalIn[], float32_t signalOut[], const float32_t NUM[][3], const float32_t DEN[][3], int order);
 
 /*------------------------------ Low Pass FIR begin ------------------------------*/
