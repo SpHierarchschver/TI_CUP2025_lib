@@ -10,6 +10,8 @@
 #define SIMAL               1e-10           // A tiny quantity.
 #define ATAN_INT_THRESHOLD  0.1             // Threshold to activate integral method of arctan.
 #define ATAN_INT_STEP       1000            // Step length for integral method of arctan.
+#define MAX_VOL             1650
+#define SCREEN_OFFSET       120
 
 typedef enum
 {
@@ -36,6 +38,8 @@ float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_
 float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
 float32_t mean (float32_t arrIn[], int N);
 float32_t squdev (float32_t arrIn[], int N, float32_t meanVal);
+
+void f32_map_u8 (float32_t arrIn[], uint8_t arrOut[], int N);
 
 int is_equal_f (float32_t a, float32_t b, 
                 float32_t tolerance);

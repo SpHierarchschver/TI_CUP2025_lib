@@ -70,6 +70,20 @@ squdev (float32_t arrIn[], int N, float32_t meanVal)
   return sum / N;
 }
 
+void
+f32_map_u8 (float32_t arrIn[], uint8_t arrOut[], int N)
+{
+  for (int i = 0; i < N; ++i)
+  {
+    if (arrIn[i] > MAX_VOL)
+      arrOut[i] = 255;
+    else if (arrIn[i] < -MAX_VOL)
+      arrOut[i] = 0;
+    else
+      arrOut[i] = (uint8_t)((arrIn[i] / MAX_VOL) * 128 + SCREEN_OFFSET);
+  }
+}
+
 int
 is_equal_f (float32_t a, float32_t b, float32_t tolerance)
 {

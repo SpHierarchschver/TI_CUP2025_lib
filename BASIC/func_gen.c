@@ -35,7 +35,6 @@ gen_triangular (float32_t signalOut[], int N, float32_t amp, float32_t freq, flo
 }
 */
 
-
 void
 gen_square (float32_t signalOut[], int N, float32_t amp, float32_t freq, float32_t phi, float32_t duty, float32_t Fs, int aboveZero)
 {
