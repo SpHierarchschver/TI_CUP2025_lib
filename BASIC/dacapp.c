@@ -3,53 +3,26 @@
 float32_t amplitude, frequency, initPhase, dc;
 WaveType waveformOut;
 uint32_t curIdx, phaseStep;
-uint32_t dacOut[DAC_RESOLUTION];
+uint32_t dacOut[DAC_LEN];
 
 static uint32_t f2dac (float32_t x);
 
 void
-dac_set_wave_single (float32_t amp, float32_t freq, float32_t phi, float32_t offset, WaveType type)
+dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N)
 {
-  if (is_equal_f (amp, amplitude, DAC_AMP_TOL)   &&
-      is_equal_f (freq, frequency, DAC_FREQ_TOL) &&
-      is_equal_f (phi, initPhase, DAC_PHI_TOL)   &&
-      is_equal_f (offset, dc, DAC_OFFSET_TOL)    &&
-      waveformOut == type)
-    return;
+  phaseStep = DAC_MAX_PHASE / DAC_SYS_CLK * freq * 1.5 + corr;
 
-  amplitude = amp;
-  frequency = freq;
-  initPhase = phi;
-  dc = offset;
-  waveformOut = type;
-  curIdx = 0;
-
-  switch (waveformOut)
-  {
-  case SINE:
-    // gen_sine (dacOut, DAC_RESOLUTION, amplitude, frequency, initPhase, DAC_SYS_CLK);
-    break;
-
-  case TRIANGULAR:
-    break;
-
-  case SQUARE:
-    break;
-  
-  default:
-    break;
-  }
+  for (int i = 0; i < N; ++i)
+    dacOut[i] = f2dac (signalIn[i]);
 }
 
 void
-dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N)
+dac_set_dc (float32_t dcVal, int N)
 {
-  // phaseStep = 4294.967296 * freq * 1.5 + corr;
-  phaseStep = DAC_MAX_PHASE / DAC_SYS_CLK * freq * 1.5 + corr;
-  // phaseStep = 1;
+  phaseStep = 1;
 
   for (int i = 0; i < N; ++i)
-    dacOut[i] = f2dac (signalIn[i]);  
+    dacOut[i] = f2dac (dcVal - DAC_MAX_VOL / 2);
 }
 
 void

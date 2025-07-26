@@ -10,7 +10,8 @@
 #define DAC_AMP         20000
 #define DAC_MAX_PHASE   4294967295
 #define DAC_SYS_CLK     1e6
-#define DAC_RESOLUTION  1024
+#define DAC_LEN         1024
+#define DAC_RESOLUTION  4096
 #define DAC_WORD_SHIFT  22
 #define DAC_MAX_VAL     4095
 #define DAC_MIN_VAL     0
@@ -29,10 +30,8 @@ typedef enum
   SQUARE,
 } WaveType;
 
-void dac_set_wave_single
-(float32_t amp, float32_t freq, 
- float32_t phi, float32_t offset, WaveType type);
 void dac_set_wave (float32_t signalIn[], uint32_t freq, int corr, int N);
+void dac_set_dc (float32_t dcVal, int N);
 void HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef * htim);
 
 #endif /* dacapp.h */
