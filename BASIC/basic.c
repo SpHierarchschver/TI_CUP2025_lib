@@ -70,6 +70,20 @@ squdev (float32_t arrIn[], int N, float32_t meanVal)
   return sum / N;
 }
 
+float32_t
+rms (float32_t arrIn[], int N)
+{
+  float32_t sum = 0.0;
+
+  for (int i = 0; i < N; ++i)
+    sum += arrIn[i] * arrIn[i];
+
+  sum /= N;
+  arm_sqrt_f32 (sum, &sum);
+
+  return sum;
+}
+
 void
 f32_map_u8 (float32_t arrIn[], uint8_t arrOut[], int N)
 {

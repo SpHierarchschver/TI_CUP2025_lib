@@ -1,6 +1,25 @@
 #include "adcapp.h"
 
 extern uint8_t adcFlag;
+extern uint32_t adcData[];
+
+void
+adc_enable (int N)
+{
+  adcFlag = 0;
+  // HAL_ADC_Start_DMA (&hadc1, adcData, N);
+  HAL_ADCEx_MultiModeStart_DMA (&hadc1, adcData, N);
+	adc_set_Fs (Fs_1024k);
+}
+
+void
+adc_disable (int N)
+{
+  adcFlag = 1;
+  // HAL_ADC_Stop_DMA (&hadc1);
+  HAL_ADCEx_MultiModeStop_DMA (&hadc1);
+  memset (adcData, 0, N);
+}
 
 void
 adc_convert (uint32_t adcIn[], float32_t adcOut[], int N)

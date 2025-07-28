@@ -45,6 +45,7 @@ float32_t f32pow (float32_t x, uint8_t n);                        // x to the n_
 float32_t arctan (float32_t x);                                   // arctan(x) by integral method.
 float32_t mean (float32_t arrIn[], int N);
 float32_t squdev (float32_t arrIn[], int N, float32_t meanVal);
+float32_t rms (float32_t arrIn[], int N);
 
 void f32_map_u8 (float32_t arrIn[], uint8_t arrOut[], int N);
 

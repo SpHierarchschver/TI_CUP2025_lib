@@ -27,6 +27,9 @@
 #define LSRR_ADD 0x07  // LSR 通道线性扫描寄存器
 #define RDW_ADD 0x08   // RDW 通道线性向上扫描寄存器
 #define FDW_ADD 0x09   // FDW 通道线性向下扫描寄
+
+#define AD9959_MAX_AMP    1023
+
 void Init_AD9959(void);
 
 void delay1(u32 length);
