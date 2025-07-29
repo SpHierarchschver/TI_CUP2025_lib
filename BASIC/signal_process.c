@@ -26,5 +26,5 @@ sigprocess_filter_attenuation (uint32_t adcDoubleIn[], int N)
 
   arm_vlog_f32 (&res, &res, 1);
   
-  return 20 * res;
+  return -20 * res / LOG_E_10;
 }

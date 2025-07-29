@@ -6,16 +6,8 @@ static void set_dataB (uint8_t val);
 void
 dgphase_set_phase (float32_t phase)
 {
-  for (int i = 100; i < 256; ++i)
-  {
-    set_dataB (i);
-
-    for (int j = 100; j < 256; ++j)
-    {
-      set_dataA (j);
-      // HAL_Delay (300);
-    }
-  }
+  set_dataA (255);
+  set_dataB (255);
 }
 
 static void

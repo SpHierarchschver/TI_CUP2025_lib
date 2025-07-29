@@ -9,17 +9,14 @@ float32_t results[SWEEP_MAX_LEN];
 
 void sweep_freq (float32_t begin, float32_t end, float32_t step, int N)
 {
-  adc_disable (N);
-
   int stepNum = (int)((end - begin) / step);
   uint32_t curFreq = (uint32_t)begin;
 
   for (int i = 0; i < stepNum; ++i)
   {
     adc_disable (N);
-		AD9959_SetFrequency4Channel (curFreq, curFreq, curFreq, curFreq);
-
-		// HAL_Delay (10000);
+		AD9959_SetFrequency4Channel (curFreq, 0, 0, 0);
+    HAL_Delay (10);
     adc_enable (N);
 
     while (!adcFlag);
@@ -28,6 +25,8 @@ void sweep_freq (float32_t begin, float32_t end, float32_t step, int N)
     results[i] = sigprocess_filter_attenuation (adcData, N);
     curFreq += (uint32_t)step;
     adcFlag = 0;
+    memset (adcData, 0, N);
+    HAL_ADCEx_MultiModeStart_DMA (&hadc1, adcData, N);
   }
 }
 
